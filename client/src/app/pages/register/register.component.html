@@ -1,0 +1,69 @@
+<div class="login-page">
+  <section class="login-visual">
+    <div class="login-skyline" aria-hidden="true">
+      <div class="building b1"></div><div class="building b2"></div><div class="building b3"></div>
+      <div class="building b4"></div><div class="building b5"></div><div class="building b6"></div>
+      <div class="building b7"></div>
+    </div>
+    <a routerLink="/home" class="brand-mark">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+        <rect width="30" height="30" rx="8" fill="#E3A857"/>
+        <path d="M8 22V10l7-4 7 4v12" stroke="#16324F" stroke-width="2" fill="none" stroke-linejoin="round"/>
+      </svg>
+      EstateHUB
+    </a>
+    <div class="login-visual-copy">
+      <h1>Start Your <span class="accent">Property Journey.</span></h1>
+      <p>Create an EstateHUB account to save favourites, explore communities and schedule property visits.</p>
+    <div class="auth-visual-badge">EstateHUB · property discovery, simplified</div>
+    </div>
+  </section>
+
+  <section class="login-panel">
+    <div class="login-card">
+      <a routerLink="/login" class="brand">
+        <svg width="28" height="28" viewBox="0 0 30 30" aria-hidden="true">
+          <rect width="30" height="30" rx="8" fill="#16324F"/>
+          <path d="M8 22V10l7-4 7 4v12" stroke="#E3A857" stroke-width="2" fill="none" stroke-linejoin="round"/>
+        </svg>
+        EstateHUB
+      </a>
+      <span class="auth-eyebrow">GET STARTED</span><h2>Create Your Account</h2>
+      <p class="sub">Create your account and keep your shortlisted homes, communities and visits together.</p>
+      <div class="auth-benefits"><span>♡ Save favourites</span><span>⌂ Book viewings</span><span>◈ Track your journey</span></div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="submit()" novalidate>
+        <div class="form-group">
+          <label for="displayName">Display name</label>
+          <input class="form-control" id="displayName" formControlName="displayName" placeholder="e.g. Dhanu Shree" autocomplete="name">
+          <span class="error-msg" *ngIf="displayName.invalid && displayName.touched">Enter your name.</span>
+        </div>
+        <div class="form-group">
+          <label for="regUsername">Username</label>
+          <input class="form-control" id="regUsername" formControlName="username" placeholder="e.g. dhanu.shree" autocomplete="username">
+          <span class="error-msg" *ngIf="username.invalid && username.touched">Username must contain at least 3 characters.</span>
+        </div>
+        <div class="form-group">
+          <label for="regPassword">Password</label>
+          <div class="pw-wrap">
+            <input class="form-control" id="regPassword" formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="At least 6 characters" autocomplete="new-password">
+            <button type="button" class="pw-toggle" (click)="showPassword = !showPassword">{{showPassword ? 'Hide' : 'Show'}}</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm password</label>
+          <div class="pw-wrap">
+            <input class="form-control" id="confirmPassword" formControlName="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'" placeholder="Re-enter password" autocomplete="new-password">
+            <button type="button" class="pw-toggle" (click)="showConfirmPassword = !showConfirmPassword">{{showConfirmPassword ? 'Hide' : 'Show'}}</button>
+          </div>
+          <span class="error-msg" *ngIf="confirmPassword.invalid && confirmPassword.touched">Passwords must match.</span>
+        </div>
+
+        <div class="login-error" *ngIf="errorMessage">{{errorMessage}}</div>
+        <div class="success-message" *ngIf="successMessage">{{successMessage}}</div>
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting">{{submitting ? 'Creating account…' : 'Create account'}}</button>
+      </form>
+      <p class="register-note">Already have an account? <a routerLink="/login">Login here</a></p>
+    </div>
+  </section>
+</div>

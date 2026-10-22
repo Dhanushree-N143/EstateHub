@@ -1,0 +1,38 @@
+<app-site-header></app-site-header>
+
+<section class="section property-detail-page" *ngIf="!loading && property">
+  <div class="container">
+    <a routerLink="/properties" class="back-link">← Back to properties</a>
+    <div class="property-detail-grid">
+      <div class="property-detail-image-wrap">
+        <img class="property-detail-image" [src]="property.image" [alt]="property.title" (error)="$any($event.target).style.display='none'">
+        <span class="property-tag detail-tag">{{property.tag}}</span>
+        <button class="heart-btn detail-heart" [class.active]="isFavourite()" (click)="toggleFavourite()" [attr.aria-label]="isFavourite() ? 'Remove favourite' : 'Add favourite'">{{isFavourite() ? '♥' : '♡'}}</button>
+      </div>
+      <div class="property-detail-content">
+        <div class="detail-topline"><span class="match-score detail-match">{{property.category === 'rent' ? 'Great rental' : 'Strong match'}}</span><span class="verified-badge">✓ EstateHUB listing</span></div>
+        <span class="eyebrow">{{property.category | titlecase}} · {{property.type | titlecase}}</span>
+        <h1>{{property.title}}</h1>
+        <p class="detail-location">{{property.city}} · {{property.community}}</p>
+        <div class="detail-price">{{formatPrice(property)}}</div>
+        <div class="detail-summary">A thoughtfully selected home in <strong>{{property.community}}</strong>, {{property.city}}.</div>
+        <div class="detail-meta-grid">
+          <div><strong>{{property.beds}}</strong><span>Bedrooms</span></div>
+          <div><strong>{{property.baths}}</strong><span>Bathrooms</span></div>
+          <div><strong>{{property.sqft | number}}</strong><span>Sq. ft.</span></div>
+        </div>
+        <p class="detail-description">A carefully selected EstateHUB listing with convenient access to the surrounding community, daily essentials and major city destinations. Use the details below to compare it with your other shortlisted properties.</p>
+        <div class="detail-highlights"><span>Community-aware</span><span>Viewing available</span><span>Preference matched</span></div>
+        <div class="detail-actions">
+          <button class="btn btn-outline" (click)="toggleFavourite()">{{isFavourite() ? '♥ Saved' : '♡ Save favourite'}}</button>
+          <a class="btn btn-primary" [routerLink]="['/bookings']" [queryParams]="{property: property.id}">Book a viewing</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" *ngIf="!loading && error">
+  <div class="container empty-state"><h3>{{error}}</h3><a routerLink="/properties" class="btn btn-primary">Browse properties</a></div>
+</section>
+<div class="home-status" *ngIf="loading">Loading property…</div>

@@ -1,0 +1,86 @@
+<app-site-header></app-site-header>
+
+<section class="page-hero compact-hero smart-match-hero">
+  <div class="container">
+    <span class="eyebrow">EstateHUB Smart Tool</span>
+    <h1>Find your <span class="accent">ideal home.</span></h1>
+    <p>Tell EstateHUB what matters to you. The matching engine ranks the catalogue and explains why each result fits your brief.</p>
+  </div>
+</section>
+
+<section class="section smart-match-section">
+  <div class="container">
+    <div class="smart-match-layout">
+      <form class="smart-match-card" (ngSubmit)="findMatches()">
+        <div class="smart-match-head">
+          <div><span class="eyebrow">Step 1</span><h2>Build your property brief</h2></div>
+          <button type="button" class="btn btn-outline btn-sm" (click)="reset()">Reset</button>
+        </div>
+
+        <div class="wizard-field-group">
+          <label>What are you looking for?</label>
+          <div class="choice-grid three">
+            <button type="button" [class.selected]="intent === 'sale'" (click)="intent='sale'">Buy</button>
+            <button type="button" [class.selected]="intent === 'rent'" (click)="intent='rent'">Rent</button>
+            <button type="button" [class.selected]="intent === 'invest'" (click)="intent='invest'">Invest</button>
+          </div>
+        </div>
+
+        <div class="wizard-grid">
+          <div class="field"><label>Preferred city</label><select [(ngModel)]="city" name="city"><option value="">Any city</option><option *ngFor="let c of cities" [value]="c">{{c}}</option></select></div>
+          <div class="field"><label>Property type</label><select [(ngModel)]="type" name="type"><option value="">Any type</option><option *ngFor="let t of types" [value]="t.value">{{t.label}}</option></select></div>
+          <div class="field"><label>Minimum bedrooms</label><select [(ngModel)]="minBeds" name="beds"><option [ngValue]="0">Any</option><option [ngValue]="1">1+</option><option [ngValue]="2">2+</option><option [ngValue]="3">3+</option><option [ngValue]="4">4+</option></select></div>
+          <div class="field"><label>Maximum budget</label><input type="number" [(ngModel)]="maxBudget" name="budget" min="0" [placeholder]="intent === 'rent' ? 'e.g. 40000 / month' : 'e.g. 25000000'" /></div>
+        </div>
+
+        <div class="wizard-field-group">
+          <label>What should the ranking prioritise?</label>
+          <div class="choice-grid four">
+            <button type="button" [class.selected]="priority === 'budget'" (click)="priority='budget'">Budget</button>
+            <button type="button" [class.selected]="priority === 'space'" (click)="priority='space'">Space</button>
+            <button type="button" [class.selected]="priority === 'location'" (click)="priority='location'">Location</button>
+            <button type="button" [class.selected]="priority === 'bedrooms'" (click)="priority='bedrooms'">Bedrooms</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block smart-match-submit" type="submit" [disabled]="loading">Find my matches</button>
+        <p class="smart-match-note">The score is deterministic and based only on the preferences and property facts shown in EstateHUB. It is a decision aid, not a valuation.</p>
+      </form>
+
+      <div class="smart-match-results">
+        <div class="results-head">
+          <div><span class="eyebrow">Step 2</span><h2>{{ searched ? 'Your ranked matches' : 'Your results will appear here' }}</h2></div>
+          <a routerLink="/compare" class="btn btn-outline btn-sm">Compare homes</a>
+        </div>
+
+        <div class="home-status" *ngIf="loading">Loading properties…</div>
+        <div class="home-error" *ngIf="error">{{error}}</div>
+
+        <div class="match-result-list" *ngIf="!loading && searched && results.length">
+          <article class="match-result-card" *ngFor="let result of results; let i = index">
+            <div class="match-rank">{{i + 1}}</div>
+            <img [src]="result.property.image" [alt]="result.property.title" loading="lazy">
+            <div class="match-result-body">
+              <div class="match-result-top"><div><span class="eyebrow">{{result.property.city}} · {{result.property.community}}</span><h3>{{result.property.title}}</h3></div><strong>{{result.score}}%</strong></div>
+              <div class="match-result-meta"><span>{{formatPrice(result.property)}}</span><span>{{result.property.beds}} beds</span><span>{{result.property.sqft | number}} sq ft</span></div>
+              <div class="reason-list"><span *ngFor="let reason of result.reasons">✓ {{reason}}</span></div>
+              <div class="match-result-actions"><a class="text-link" [routerLink]="['/properties', result.property.id]">View details →</a><a class="btn btn-primary btn-sm" [routerLink]="['/bookings']" [queryParams]="{property:result.property.id}">Book viewing</a></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="empty-state" *ngIf="!loading && searched && !results.length">
+          <h3>No exact matches found.</h3>
+          <p>Try widening the city, type, bedroom or budget preference.</p>
+          <button class="btn btn-primary" (click)="reset()">Adjust preferences</button>
+        </div>
+
+        <div class="smart-match-placeholder" *ngIf="!searched && !loading">
+          <div class="smart-match-placeholder-icon">⌂</div>
+          <h3>Personalised ranking, not endless scrolling.</h3>
+          <p>Choose your preferences and EstateHUB will rank the strongest matches with visible reasons for every score.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

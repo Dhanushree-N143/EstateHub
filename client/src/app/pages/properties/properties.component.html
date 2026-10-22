@@ -1,0 +1,51 @@
+<app-site-header></app-site-header>
+
+<section class="page-hero compact-hero">
+  <div class="container">
+    <span class="eyebrow">Property catalogue</span>
+    <h1>Find the right <span class="accent">property.</span></h1>
+    <p>Explore 30+ EstateHUB listings with community context, visual previews and preference-based matching.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="filter-panel">
+      <div class="field"><label>Search</label><input [(ngModel)]="search" (ngModelChange)="applyFilters()" placeholder="Property, city or community"></div>
+      <div class="field"><label>Category</label><select [(ngModel)]="category" (ngModelChange)="applyFilters()"><option value="">All</option><option value="sale">Sale</option><option value="rent">Rent</option><option value="invest">Invest</option></select></div>
+      <div class="field"><label>Type</label><select [(ngModel)]="type" (ngModelChange)="applyFilters()"><option value="">All</option><option value="apartment">Apartment</option><option value="villa">Villa</option><option value="studio">Studio</option><option value="penthouse">Penthouse</option></select></div>
+      <div class="field"><label>City</label><select [(ngModel)]="city" (ngModelChange)="applyFilters()"><option value="">All</option><option *ngFor="let c of ['Madurai','Chennai','Bengaluru','Coimbatore']" [value]="c">{{c}}</option></select></div>
+      <div class="field"><label>Sort</label><select [(ngModel)]="sort" (ngModelChange)="applyFilters()"><option value="">Default</option><option value="low">Price: low → high</option><option value="high">Price: high → low</option></select></div>
+      <button class="btn btn-outline" (click)="reset()">Reset</button>
+    </div>
+
+    <div class="catalogue-toolbar">
+      <div class="listing-count" *ngIf="!loading">{{ filtered.length }} properties found</div>
+      <button class="btn btn-outline btn-sm" [class.active-filter]="showFavourites" (click)="showFavourites = !showFavourites; applyFilters()">
+        {{showFavourites ? 'Showing My Favourites' : 'My Favourites'}}
+      </button>
+    </div>
+
+    <div class="property-grid" *ngIf="!loading">
+      <article class="property-card property-card-image" *ngFor="let p of filtered; trackBy: trackById">
+        <div class="property-photo-wrap">
+          <img class="property-photo" [src]="p.image" [alt]="p.title" loading="lazy" (error)="$any($event.target).style.display='none'">
+          <span class="property-tag">{{p.tag}}</span>
+          <button class="heart-btn" [class.active]="isFavourite(p.id)" (click)="toggleFavourite(p.id)">{{isFavourite(p.id) ? '♥' : '♡'}}</button>
+          <span class="match-score">{{getMatchScore(p)}}% Match</span>
+        </div>
+        <div class="property-body">
+          <div class="property-title-row"><h3>{{p.title}}</h3><span class="price">{{formatPrice(p)}}</span></div>
+          <p class="location">{{p.city}} · {{p.community}} · {{p.type | titlecase}}</p>
+          <div class="property-meta"><span>{{p.beds}} beds</span><span>{{p.baths}} baths</span><span>{{p.sqft | number}} sq ft</span></div>
+          <div class="property-actions">
+            <a [routerLink]="['/properties', p.id]" class="text-link">View details →</a>
+            <a [routerLink]="['/bookings']" [queryParams]="{property:p.id}" class="btn btn-primary btn-sm">Book viewing</a>
+          </div>
+        </div>
+      </article>
+    </div>
+    <div class="empty-state" *ngIf="!loading && !filtered.length"><h3>{{showFavourites ? 'No favourites saved yet.' : 'No properties found.'}}</h3><button class="btn btn-primary" (click)="reset()">Reset filters</button></div>
+    <div class="home-status" *ngIf="loading">Loading properties…</div>
+  </div>
+</section>

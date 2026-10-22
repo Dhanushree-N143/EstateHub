@@ -1,0 +1,85 @@
+<div class="login-page">
+  <section class="login-visual">
+    <div class="login-skyline" aria-hidden="true">
+      <div class="building b1"></div><div class="building b2"></div><div class="building b3"></div>
+      <div class="building b4"></div><div class="building b5"></div><div class="building b6"></div>
+      <div class="building b7"></div>
+    </div>
+
+    <a routerLink="/home" class="brand-mark">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+        <rect width="30" height="30" rx="8" fill="#E3A857"/>
+        <path d="M8 22V10l7-4 7 4v12" stroke="#16324F" stroke-width="2" fill="none" stroke-linejoin="round"/>
+      </svg>
+      EstateHUB
+    </a>
+
+    <div class="login-visual-copy">
+      <h1>Find A Place That<br>Feels Like <span class="accent">HOME</span></h1>
+      <p>Sign in to pick up your saved searches and favourites right where you left them.</p>
+    <div class="auth-visual-badge">EstateHUB · property discovery, simplified</div>
+    </div>
+  </section>
+
+  <section class="login-panel">
+    <div class="login-card">
+      <a routerLink="/home" class="brand">
+        <svg width="28" height="28" viewBox="0 0 30 30" aria-hidden="true">
+          <rect width="30" height="30" rx="8" fill="#16324F"/>
+          <path d="M8 22V10l7-4 7 4v12" stroke="#E3A857" stroke-width="2" fill="none" stroke-linejoin="round"/>
+        </svg>
+        EstateHUB
+      </a>
+
+      <span class="auth-eyebrow">WELCOME BACK</span><h2>Login To Your Account</h2>
+      <p class="sub">Welcome back. Continue your property journey from where you left off.</p>
+      <div class="auth-benefits"><span>♡ Save favourites</span><span>⌂ Book viewings</span><span>◈ Compare matches</span></div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="submit()" novalidate>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input class="form-control"
+                 [class.is-invalid]="username.invalid && username.touched"
+                 type="text" id="username" formControlName="username"
+                 placeholder="e.g. priya.raman" autocomplete="username">
+          <span class="error-msg" *ngIf="username.invalid && username.touched">
+            Enter a valid username.
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="pw-wrap">
+            <input class="form-control"
+                   [class.is-invalid]="password.invalid && password.touched"
+                   [type]="showPassword ? 'text' : 'password'"
+                   id="password" formControlName="password"
+                   placeholder="••••••••" autocomplete="current-password">
+            <button type="button" class="pw-toggle" (click)="showPassword = !showPassword">
+              {{ showPassword ? 'Hide' : 'Show' }}
+            </button>
+          </div>
+          <span class="error-msg" *ngIf="password.invalid && password.touched">
+            Password must contain at least 6 characters.
+          </span>
+        </div>
+
+        <div class="auth-options">
+          <label class="remember-option">
+            <input type="checkbox" formControlName="rememberMe">
+            <span>Remember me</span>
+          </label>
+          <p class="support-note">Password recovery is available through the application administrator.</p>
+        </div>
+
+        <div class="login-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="submitting">
+          {{ submitting ? 'Signing in…' : 'Login' }}
+        </button>
+      </form>
+
+      <p class="register-note">Are you new? <a routerLink="/register">Register here</a></p>
+</div>
+  </section>
+</div>

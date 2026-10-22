@@ -1,0 +1,36 @@
+<app-site-header></app-site-header>
+
+<section class="page-hero compact-hero">
+  <div class="container">
+    <span class="eyebrow">Appointments</span>
+    <h1>Manage your <span class="accent">bookings.</span></h1>
+    <p>Turn a shortlisted property into a real-world visit. Choose the property, date and time that work for you.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container booking-layout">
+    <div class="booking-form-card booking-form-premium">
+      <div class="booking-card-top"><span class="booking-icon">⌂</span><span class="booking-step">STEP 1 · REQUEST</span></div>
+      <span class="eyebrow">New appointment</span>
+      <h2>Book a visit</h2>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="field"><label>Property</label><select formControlName="propertyId"><option value="">Choose a property</option><option *ngFor="let p of propertyList" [value]="p.id">{{p.title}} — {{p.city}}</option></select></div>
+        <div class="form-row"><div class="field"><label>Date</label><input type="date" formControlName="date" [min]="today"></div><div class="field"><label>Time</label><input type="time" formControlName="time"></div></div>
+        <div class="field"><label>Purpose</label><div class="choice-row"><label><input type="radio" value="Viewing" formControlName="purpose"> Property viewing</label><label><input type="radio" value="Consultation" formControlName="purpose"> Consultation</label></div></div>
+        <div class="login-error" *ngIf="error">{{error}}</div>
+        <button class="btn btn-primary btn-block" type="submit">Request booking</button>
+      </form>
+    </div>
+
+    <div class="booking-list-card booking-list-premium">
+      <div class="section-head compact"><span class="eyebrow">Your schedule</span><h2>Upcoming bookings</h2></div>
+      <div class="booking-item" *ngFor="let b of bookingList">
+        <div class="booking-date"><strong>{{b.date | date:'dd'}}</strong><span>{{b.date | date:'MMM'}}</span></div>
+        <div class="booking-info"><h3>{{b.propertyTitle}}</h3><p>{{b.time}} · {{b.purpose}}</p><span class="status" [class.confirmed]="b.status === 'Confirmed'">{{b.status}}</span></div>
+        <button class="btn btn-outline btn-sm" (click)="cancel(b.id)">Cancel</button>
+      </div>
+      <div class="empty-state small" *ngIf="!bookingList.length"><p>No bookings yet. Choose a property to schedule your first visit.</p><a routerLink="/properties" class="btn btn-primary">Browse properties</a></div>
+    </div>
+  </div>
+</section>

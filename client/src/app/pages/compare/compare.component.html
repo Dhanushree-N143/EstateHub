@@ -1,0 +1,49 @@
+<app-site-header></app-site-header>
+
+<section class="page-hero compact-hero compare-hero">
+  <div class="container">
+    <span class="eyebrow">EstateHUB Decision Tool</span>
+    <h1>Compare your <span class="accent">shortlist.</span></h1>
+    <p>Select two or three properties and see their facts side by side. EstateHUB also calculates a transparent decision score to help you identify the strongest overall option.</p>
+  </div>
+</section>
+
+<section class="section compare-section">
+  <div class="container">
+    <div class="compare-toolbar">
+      <div><span class="eyebrow">Step 1</span><h2>Select properties</h2><p>{{selected.length}} of 3 selected. Properties from the same category can be compared together.</p></div>
+      <div class="compare-toolbar-actions"><a routerLink="/match" class="btn btn-outline btn-sm">Find ideal home</a><button class="btn btn-outline btn-sm" (click)="clear()" [disabled]="!selected.length">Clear</button></div>
+    </div>
+
+    <div class="compare-filters">
+      <select [(ngModel)]="filterCategory" #category="ngModel"><option value="">All categories</option><option value="sale">Sale</option><option value="rent">Rent</option><option value="invest">Invest</option></select>
+      <select [(ngModel)]="filterCity" #city="ngModel"><option value="">All cities</option><option value="Madurai">Madurai</option><option value="Chennai">Chennai</option><option value="Bengaluru">Bengaluru</option><option value="Coimbatore">Coimbatore</option></select>
+      <span class="compare-hint">Click a card to add/remove it from the comparison.</span>
+    </div>
+
+    <div class="compare-notice" *ngIf="notice">{{notice}}</div>
+    <div class="home-status" *ngIf="loading">Loading properties…</div>
+
+    <div class="compare-property-grid" *ngIf="!loading">
+      <button class="compare-property-card" *ngFor="let p of availableProperties" [class.selected]="isSelected(p.id)" (click)="toggle(p)">
+        <div class="compare-property-image"><img [src]="p.image" [alt]="p.title" loading="lazy"><span>{{isSelected(p.id) ? 'Selected ✓' : 'Add to compare +'}}</span></div>
+        <div class="compare-property-body"><div><h3>{{p.title}}</h3><p>{{p.city}} · {{p.community}}</p></div><strong>{{formatPrice(p)}}</strong><div class="compare-mini-meta"><span>{{p.beds}} beds</span><span>{{p.baths}} baths</span><span>{{p.sqft | number}} sq ft</span></div></div>
+      </button>
+    </div>
+
+    <div class="compare-table-wrap" *ngIf="selected.length >= 2">
+      <div class="compare-table-head">
+        <div><span class="eyebrow">Step 2</span><h2>Side-by-side decision</h2><p>Price is weighted 35%, space 30%, bedrooms 20% and bathrooms 15% in the transparent overall score.</p></div>
+        <div class="compare-winner" *ngIf="winnerIndex >= 0">Best overall: <strong>{{selected[winnerIndex].title}}</strong> · {{decisionScores[winnerIndex]}}/100</div>
+      </div>
+
+      <div class="comparison-table">
+        <div class="comparison-row comparison-header"><div>Criteria</div><div *ngFor="let p of selected; let i = index" [class.winner-column]="i === winnerIndex"><img [src]="p.image" [alt]="p.title"><strong>{{p.title}}</strong><span>{{formatPrice(p)}}</span></div></div>
+        <div class="comparison-row" *ngFor="let metric of metrics"><div>{{metric.label}}</div><div *ngFor="let value of metric.values; let i = index" [class.best-value]="i === metric.winner">{{value}}<small *ngIf="i === metric.winner && metric.winner >= 0">Best</small></div></div>
+        <div class="comparison-row score-row"><div>Decision score</div><div *ngFor="let score of decisionScores; let i = index" [class.best-value]="i === winnerIndex"><strong>{{score}}/100</strong><small *ngIf="i === winnerIndex">Recommended</small></div></div>
+      </div>
+    </div>
+
+    <div class="empty-state compare-empty" *ngIf="!loading && selected.length < 2"><h3>Select at least two properties.</h3><p>The comparison becomes available after you select two properties from the catalogue above.</p></div>
+  </div>
+</section>

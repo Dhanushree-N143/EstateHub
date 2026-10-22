@@ -1,0 +1,142 @@
+<app-site-header></app-site-header>
+
+
+<section class="hero">
+  <video class="hero-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+    <source src="assets/estate-hero.mp4" type="video/mp4">
+  </video>
+  <div class="hero-video-overlay"></div>
+  <div class="hero-skyline" aria-hidden="true">
+    <div class="sky-building s1"></div><div class="sky-building s2"></div><div class="sky-building s3"></div>
+    <div class="sky-building s4"></div><div class="sky-building s5"></div><div class="sky-building s6"></div>
+    <div class="sky-building s7"></div>
+  </div>
+
+  <div class="container">
+    <div class="hero-content">
+      <p class="eyebrow hero-eyebrow">Welcome back, {{ userName }}</p>
+      <h1>Find Your <span class="accent">Dream Home</span></h1>
+      <p>Properties that match your style. Trusted listings, transparent deals — all in one place.</p>
+      <div class="hero-trust-row"><span>✓ Verified-style listings</span><span>✓ Community-aware search</span><span>✓ Easy viewing bookings</span></div>
+
+      <div class="tabbar" role="tablist" aria-label="Listing category">
+        <button [class.active]="activeCategory === 'sale'" (click)="setCategory('sale')">Sales</button>
+        <button [class.active]="activeCategory === 'rent'" (click)="setCategory('rent')">Rentals</button>
+        <button [class.active]="activeCategory === 'invest'" (click)="setCategory('invest')">Invest</button>
+      </div>
+    </div>
+
+    <form class="search-widget" (ngSubmit)="applyFilters()">
+      <div class="field">
+        <label for="categoryInput">Categories</label>
+        <select id="categoryInput" [(ngModel)]="category" name="category">
+          <option value="">Any type</option>
+          <option value="apartment">Apartment</option>
+          <option value="villa">Villa</option>
+          <option value="studio">Studio</option>
+          <option value="penthouse">Penthouse</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="cityInput">City</label>
+        <input id="cityInput" [(ngModel)]="city" name="city" type="text" placeholder="e.g. Madurai">
+      </div>
+
+      <div class="field">
+        <label for="bedsInput">Beds &amp; Baths</label>
+        <select id="bedsInput" [(ngModel)]="beds" name="beds">
+          <option value="">Any</option>
+          <option value="1">1+ Bed</option>
+          <option value="2">2+ Beds</option>
+          <option value="3">3+ Beds</option>
+          <option value="4">4+ Beds</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="priceInput">Price</label>
+        <select id="priceInput" [(ngModel)]="price" name="price">
+          <option value="">Sort: default</option>
+          <option value="low">Low to high</option>
+          <option value="high">High to low</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-gold">Search</button>
+    </form>
+  </div>
+</section>
+
+<section class="section" id="propertiesSection">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Curated for you</span>
+      <h2>Featured properties</h2>
+      <p>Use the tabs and filters to browse the listings returned by the Node.js API.</p>
+    </div>
+
+    <div class="home-status" *ngIf="loading">Loading properties…</div>
+    <div class="home-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <div class="property-grid" *ngIf="!loading">
+      <article class="property-card" *ngFor="let property of filteredProperties; trackBy: trackById">
+        <div class="property-photo-wrap">
+          <img class="property-photo" [src]="property.image" [alt]="property.title" loading="lazy" (error)="$any($event.target).style.display='none'">
+          <span class="property-tag">{{ property.tag }}</span>
+          <button class="heart-btn" [class.active]="isFavourite(property.id)" (click)="toggleFavourite(property.id)" [attr.aria-label]="isFavourite(property.id) ? 'Remove favourite' : 'Add favourite'">
+            {{ isFavourite(property.id) ? '♥' : '♡' }}
+          </button>
+        </div>
+
+        <div class="property-body">
+          <div class="property-title-row">
+            <h3>{{ property.title }}</h3>
+            <span class="price">{{ formatPrice(property.price) }}</span>
+          </div>
+          <p class="location">📍 {{ property.city }} · {{ property.type | titlecase }}</p>
+          <div class="property-meta">
+            <span>{{ property.beds }} beds</span>
+            <span>{{ property.baths }} baths</span>
+            <span>{{ property.sqft | number }} sq ft</span>
+          </div>
+          <div class="property-actions">
+            <a [routerLink]="['/properties', property.id]" class="text-link">View details →</a>
+            <a [routerLink]="['/bookings']" [queryParams]="{property:property.id}" class="btn btn-primary btn-sm">Book viewing</a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && !filteredProperties.length">
+      <h3>No properties match those filters.</h3>
+      <p>Try widening your search.</p>
+      <button class="btn btn-primary" (click)="resetFilters()">Reset filters</button>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Why EstateHUB</span>
+      <h2>Everything you need to move from search to viewing.</h2>
+      <p>Discover properties, understand the communities around them, save the ones you like and schedule a viewing without leaving EstateHUB.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="num">30+</div><div class="label">Curated properties</div></div>
+      <div class="stat"><div class="num">4</div><div class="label">Distinct communities</div></div>
+      <div class="stat"><div class="num">4</div><div class="label">Cities covered</div></div>
+      <div class="stat"><div class="num">1</div><div class="label">Unified workflow</div></div>
+    </div>
+    <div class="home-feature-strip">
+      <article><span class="feature-number">01</span><div><h3>Discover</h3><p>Search by city, category, type and bedrooms.</p></div></article>
+      <article><span class="feature-number">02</span><div><h3>Match</h3><p>Use the preference-based match score to shortlist properties.</p></div></article>
+      <article><span class="feature-number">03</span><div><h3>Book</h3><p>Save a property and request a convenient viewing.</p></div></article>
+    </div>
+  </div>
+</section>
+
+
+<footer class="site-footer"><div class="container footer-grid"><div><div class="footer-brand">EstateHUB</div><p>Trusted listings, transparent deals.</p></div><div><span class="footer-label">Explore</span><a routerLink="/properties">Properties</a><a routerLink="/bookings">Bookings</a></div><div><span class="footer-label">Discover</span><a routerLink="/communities">Communities</a><a routerLink="/about">About EstateHUB</a></div></div></footer>

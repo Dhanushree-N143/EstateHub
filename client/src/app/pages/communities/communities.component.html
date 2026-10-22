@@ -1,0 +1,61 @@
+<app-site-header></app-site-header>
+
+<section class="page-hero compact-hero communities-hero">
+  <div class="container">
+    <span class="eyebrow">Real neighbourhoods · 14 locations</span>
+    <h1>Explore <span class="accent">real communities.</span></h1>
+    <p>Browse EstateHUB by established neighbourhoods across Madurai, Chennai, Bengaluru and Coimbatore.</p>
+  </div>
+</section>
+
+<section class="section communities-section">
+  <div class="container">
+    <div class="community-intro">
+      <div>
+        <span class="eyebrow">Location-first discovery</span>
+        <h2>Find a place that fits the way you live.</h2>
+      </div>
+      <p>These are real city neighbourhoods and residential corridors, not fictional development names. Select one to see the EstateHUB listings for that city and neighbourhood.</p><span class="community-source-note">Photography: Unsplash stock imagery. Images are representative lifestyle/property visuals for the community cards.</span>
+    </div>
+
+    <div class="community-city-group" *ngFor="let city of ['Madurai','Chennai','Bengaluru','Coimbatore']">
+      <div class="city-heading">
+        <div>
+          <span class="eyebrow">{{city}}</span>
+          <h3>{{ city === 'Bengaluru' ? 'Bengaluru' : city }}</h3>
+        </div>
+        <span class="city-count">Neighbourhoods across {{city}}</span>
+      </div>
+
+      <div class="community-grid">
+        <article class="community-card" *ngFor="let c of communities" [hidden]="c.city !== city">
+          <div class="community-art">
+            <img [src]="c.image" [alt]="c.name + ', ' + c.city + ' residential area'" loading="lazy">
+            <div class="community-image-shade"></div><span class="community-photo-credit">Photo · Unsplash</span>
+            <span class="community-city">{{c.city}}</span>
+            <span class="community-arrow">↗</span>
+          </div>
+          <div class="community-body">
+            <div class="community-heading">
+              <h2>{{c.name}}</h2>
+              <strong>{{c.properties}} listings</strong>
+            </div>
+            <p>{{c.description}}</p>
+            <div class="chips"><span *ngFor="let h of c.highlights">{{h}}</span></div>
+            <a routerLink="/properties" [queryParams]="{city:c.city, community:c.name}" class="community-cta">
+              Explore {{c.name}} <span>→</span>
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div><div class="footer-brand">EstateHUB</div><p>Trusted listings, transparent deals.</p></div>
+    <div><span class="footer-label">Explore</span><a routerLink="/properties">Properties</a><a routerLink="/bookings">Bookings</a></div>
+    <div><span class="footer-label">Discover</span><a routerLink="/communities">Communities</a><a routerLink="/about">About EstateHUB</a></div>
+  </div>
+</footer>

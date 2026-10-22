@@ -1,0 +1,29 @@
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a routerLink="/home" class="brand">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+        <rect width="30" height="30" rx="8" fill="#16324F"/>
+        <path d="M8 22V10l7-4 7 4v12" stroke="#E3A857" stroke-width="2" fill="none" stroke-linejoin="round"/>
+        <rect x="13" y="14" width="4" height="8" fill="#E3A857"/>
+      </svg>
+      EstateHUB
+    </a>
+
+    <nav class="nav-links" [class.is-open]="mobileMenuOpen">
+      <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="mobileMenuOpen=false">Home</a>
+      <a routerLink="/about" routerLinkActive="active" (click)="mobileMenuOpen=false">About Us</a>
+      <a routerLink="/properties" routerLinkActive="active" (click)="mobileMenuOpen=false">Properties</a>
+      <a routerLink="/communities" routerLinkActive="active" (click)="mobileMenuOpen=false">Communities</a>
+      <a routerLink="/bookings" routerLinkActive="active" (click)="mobileMenuOpen=false">Bookings</a>
+      <a routerLink="/match" routerLinkActive="active" (click)="mobileMenuOpen=false">Smart Tools</a>
+    </nav>
+
+    <div class="nav-actions">
+      <span class="welcome-user"><span class="user-dot"></span>Hi, {{ userName }}</span>
+      <button class="btn btn-primary btn-sm" (click)="logout()">Logout</button>
+      <button class="hamburger" aria-label="Toggle menu" [attr.aria-expanded]="mobileMenuOpen" (click)="mobileMenuOpen = !mobileMenuOpen">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
